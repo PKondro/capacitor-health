@@ -15,7 +15,7 @@ import com.getcapacitor.JSObject
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.ZoneOffset // <--- ŠITAS BUVO DINGĘS, DABAR YRA
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
@@ -77,7 +77,6 @@ class HealthManager {
     ): JSArray {
         val samples = mutableListOf<Pair<Instant, JSObject>>()
         
-        // Pagalbinė funkcija skaitymui, kad nereiktų kartoti kodo
         suspend fun <T : Record> fetch(clazz: kotlin.reflect.KClass<T>, processor: (T) -> Unit) {
              readRecords(client, clazz, startTime, endTime, limit, processor)
         }
@@ -117,7 +116,6 @@ class HealthManager {
             HealthDataType.SLEEP_STAGES -> fetch(SleepSessionRecord::class) { record ->
                 record.stages.forEach { stage ->
                     val duration = Duration.between(stage.startTime, stage.endTime).toMinutes().toDouble()
-                    // Naudojame pagrindinio įrašo metaduomenis, nes stadija jų neturi
                     val payload = createSamplePayload(dataType, stage.startTime, stage.endTime, duration, record.metadata)
                     
                     val stageDescription = when(stage.stage) {
@@ -139,7 +137,6 @@ class HealthManager {
                 val duration = Duration.between(record.startTime, record.endTime).toMinutes().toDouble()
                 val payload = createSamplePayload(dataType, record.startTime, record.endTime, duration, record.metadata)
                 
-                // Čia naudojame vidinę funkciją toWorkoutTypeString
                 val typeName = toWorkoutTypeString(record.exerciseType)
                 payload.put("activityName", typeName)
                 payload.put("type", typeName)
@@ -204,7 +201,9 @@ class HealthManager {
         endTime: Instant,
         metadata: Map<String, String>?
     ) {
-        // --- Čia ištaisyta "No value passed for parameter 'metadata'" klaida ---
+        // PATAISYTA: Naudojame Metadata() konstruktorių
+        val meta = Metadata() 
+        
         when (dataType) {
             HealthDataType.STEPS -> {
                 val record = StepsRecord(
@@ -213,7 +212,7 @@ class HealthManager {
                     endTime = endTime, 
                     endZoneOffset = zoneOffset(endTime),
                     count = value.toLong().coerceAtLeast(0),
-                    metadata = Metadata.manualEntry() // <--- PRIVALOMAS
+                    metadata = meta
                 )
                 client.insertRecords(listOf(record))
             }
@@ -222,7 +221,7 @@ class HealthManager {
                     time = startTime, 
                     zoneOffset = zoneOffset(startTime),
                     weight = Mass.kilograms(value),
-                    metadata = Metadata.manualEntry() // <--- PRIVALOMAS
+                    metadata = meta
                 )
                 client.insertRecords(listOf(record))
             }
@@ -283,7 +282,6 @@ class HealthManager {
         private const val DEFAULT_PAGE_SIZE = 100
         private const val MAX_PAGE_SIZE = 500
         
-        // --- PERKĖLIAU LOGIKĄ ČIA, KAD NEBŪTŲ REDECLARATION KLAIDŲ ---
         fun toWorkoutTypeString(type: Int): String {
             return when (type) {
                 ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> "running"
