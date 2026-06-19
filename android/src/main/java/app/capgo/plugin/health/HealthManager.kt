@@ -201,7 +201,7 @@ class HealthManager {
         endTime: Instant,
         metadata: Map<String, String>?
     ) {
-        val meta = androidx.health.connect.client.records.metadata.Metadata.EMPTY
+        val meta = androidx.health.connect.client.records.metadata.Metadata()
 
         when (dataType) {
             HealthDataType.STEPS -> {
@@ -239,7 +239,7 @@ class HealthManager {
         startTime: Instant,
         endTime: Instant
     ) {
-        val meta = androidx.health.connect.client.records.metadata.Metadata.EMPTY
+        val meta = androidx.health.connect.client.records.metadata.Metadata()
 
         val mealTypeInt = when (mealTypeStr.lowercase()) {
             "breakfast" -> MealType.MEAL_TYPE_BREAKFAST
