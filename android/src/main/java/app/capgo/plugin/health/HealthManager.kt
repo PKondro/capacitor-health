@@ -201,7 +201,7 @@ class HealthManager {
         endTime: Instant,
         metadata: Map<String, String>?
     ) {
-        val meta = androidx.health.connect.client.records.metadata.Metadata()
+        // Ištrinta val meta = ... eilutė
 
         when (dataType) {
             HealthDataType.STEPS -> {
@@ -210,8 +210,8 @@ class HealthManager {
                     startZoneOffset = zoneOffset(startTime),
                     endTime = endTime, 
                     endZoneOffset = zoneOffset(endTime),
-                    count = value.toLong().coerceAtLeast(0),
-                    metadata = meta // Pridedame šią eilutę
+                    count = value.toLong().coerceAtLeast(0)
+                    // Ištrinta metadata eilutė
                 )
                 client.insertRecords(listOf(record))
             }
@@ -219,8 +219,8 @@ class HealthManager {
                  val record = WeightRecord(
                     time = startTime, 
                     zoneOffset = zoneOffset(startTime),
-                    weight = Mass.kilograms(value),
-                    metadata = meta // Pridedame šią eilutę
+                    weight = Mass.kilograms(value)
+                    // Ištrinta metadata eilutė
                 )
                 client.insertRecords(listOf(record))
             }
@@ -239,7 +239,7 @@ class HealthManager {
         startTime: Instant,
         endTime: Instant
     ) {
-        val meta = androidx.health.connect.client.records.metadata.Metadata()
+        // Ištrinta val meta = ... eilutė
 
         val mealTypeInt = when (mealTypeStr.lowercase()) {
             "breakfast" -> MealType.MEAL_TYPE_BREAKFAST
@@ -259,8 +259,8 @@ class HealthManager {
             energy = if (calories > 0) Energy.kilocalories(calories) else null,
             protein = if (protein > 0) Mass.grams(protein) else null,
             totalCarbohydrate = if (carbs > 0) Mass.grams(carbs) else null,
-            totalFat = if (fat > 0) Mass.grams(fat) else null,
-            metadata = meta // Pridedame šią eilutę
+            totalFat = if (fat > 0) Mass.grams(fat) else null
+            // Ištrinta metadata eilutė
         )
 
         client.insertRecords(listOf(record))
