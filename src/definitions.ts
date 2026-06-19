@@ -8,7 +8,8 @@ export type HealthDataType =
   | 'respiratoryRate'
   | 'oxygenSaturation'
   | 'restingHeartRate'
-  | 'heartRateVariability';
+  | 'heartRateVariability'
+  | 'nutrition';
 
 export type HealthUnit = 'count' | 'meter' | 'kilocalorie' | 'bpm' | 'kilogram' | 'minute' | 'percent' | 'millisecond';
 
@@ -153,6 +154,29 @@ export interface WriteSampleOptions {
   metadata?: Record<string, string>;
 }
 
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'unknown';
+
+export interface NutritionSample {
+  /** Maisto pavadinimas, pvz., "Grikiai" arba "Bulka" */
+  name?: string;
+  /** Valgio tipas */
+  mealType?: MealType;
+  /** Bendras kalorijų kiekis (kcal) */
+  calories?: number;
+  /** Baltymai (gramais) */
+  protein?: number;
+  /** Angliavandeniai (gramais) */
+  carbs?: number;
+  /** Riebalai (gramais) */
+  fat?: number;
+  /** ISO 8601 pradžios data (privaloma Health Connect) */
+  startDate: string;
+  /** ISO 8601 pabaigos data */
+  endDate: string;
+  /** Papildomi metaduomenys, jei prireiktų */
+  metadata?: Record<string, string>;
+}
+
 export type BucketType = 'hour' | 'day' | 'week' | 'month';
 
 export type AggregationType = 'sum' | 'average' | 'min' | 'max';
@@ -196,6 +220,8 @@ export interface HealthPlugin {
   readSamples(options: QueryOptions): Promise<ReadSamplesResult>;
   /** Writes a single sample to the native health store. */
   saveSample(options: WriteSampleOptions): Promise<void>;
+  /** Writes a nutrition sample (food, macros) to the native health store. */
+  saveNutrition(options: NutritionSample): Promise<void>;
 
   /**
    * Get the native Capacitor plugin version

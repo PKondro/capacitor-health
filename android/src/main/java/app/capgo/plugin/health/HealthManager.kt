@@ -15,7 +15,7 @@ import com.getcapacitor.JSObject
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset // <--- ŠITAS BUVO DINGĘS, DABAR YRA
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
 
@@ -227,6 +227,46 @@ class HealthManager {
             }
             else -> {}
         }
+    }
+
+    suspend fun saveNutrition(
+        client: HealthConnectClient,
+        name: String,
+        mealTypeStr: String,
+        calories: Double,
+        protein: Double,
+        carbs: Double,
+        fat: Double,
+        startTime: Instant,
+        endTime: Instant
+    ) {
+        val meta = Metadata()
+
+        // Susiejame tavo tekstinį valgio tipą su Health Connect konstantomis
+        val mealTypeInt = when (mealTypeStr.lowercase()) {
+            "breakfast" -> NutritionRecord.MEAL_TYPE_BREAKFAST
+            "lunch" -> NutritionRecord.MEAL_TYPE_LUNCH
+            "dinner" -> NutritionRecord.MEAL_TYPE_DINNER
+            "snack" -> NutritionRecord.MEAL_TYPE_SNACK
+            else -> NutritionRecord.MEAL_TYPE_UNKNOWN
+        }
+
+        // Sukuriame Health Connect maisto įrašą
+        val record = NutritionRecord(
+            startTime = startTime,
+            startZoneOffset = zoneOffset(startTime),
+            endTime = endTime,
+            endZoneOffset = zoneOffset(endTime),
+            name = name.takeIf { it.isNotBlank() },
+            mealType = mealTypeInt,
+            energy = if (calories > 0) Energy.kilocalories(calories) else null,
+            protein = if (protein > 0) Mass.grams(protein) else null,
+            totalCarbohydrate = if (carbs > 0) Mass.grams(carbs) else null,
+            totalFat = if (fat > 0) Mass.grams(fat) else null,
+            metadata = meta
+        )
+
+        client.insertRecords(listOf(record))
     }
 
     fun parseInstant(value: String?, defaultInstant: Instant): Instant {

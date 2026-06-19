@@ -22,7 +22,8 @@ enum class HealthDataType(
     RESPIRATORY_RATE("respiratoryRate", RespiratoryRateRecord::class, "bpm"),
     OXYGEN_SATURATION("oxygenSaturation", OxygenSaturationRecord::class, "percent"),
     RESTING_HEART_RATE("restingHeartRate", RestingHeartRateRecord::class, "bpm"),
-    HRV("hrv", HeartRateVariabilityRmssdRecord::class, "millisecond"); 
+    HRV("hrv", HeartRateVariabilityRmssdRecord::class, "millisecond"),
+    NUTRITION("nutrition", NutritionRecord::class, "meal");
 
     val readPermission: String
         get() = HealthPermission.getReadPermission(recordClass)

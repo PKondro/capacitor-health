@@ -12,6 +12,7 @@ import type {
   QueryWorkoutsResult,
   ReadSamplesResult,
   WriteSampleOptions,
+  NutritionSample,
 } from './definitions';
 
 export class HealthWeb extends WebPlugin implements HealthPlugin {
@@ -37,6 +38,10 @@ export class HealthWeb extends WebPlugin implements HealthPlugin {
 
   async saveSample(_options: WriteSampleOptions): Promise<void> {
     throw this.unimplemented('Writing health data is only available on native platforms.');
+  }
+
+  async saveNutrition(_options: NutritionSample): Promise<void> {
+    throw this.unimplemented('Writing nutrition data is only available on native platforms.');
   }
 
   async getPluginVersion(): Promise<{ version: string }> {

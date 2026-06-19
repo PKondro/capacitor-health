@@ -257,6 +257,45 @@ class HealthPlugin : Plugin() {
         }
     }
 
+    @PluginMethod
+    fun saveNutrition(call: PluginCall) {
+        val name = call.getString("name") ?: ""
+        val mealType = call.getString("mealType") ?: "unknown"
+        val calories = call.getDouble("calories") ?: 0.0
+        val protein = call.getDouble("protein") ?: 0.0
+        val carbs = call.getDouble("carbs") ?: 0.0
+        val fat = call.getDouble("fat") ?: 0.0
+
+        val startInstant = try {
+            manager.parseInstant(call.getString("startDate"), Instant.now())
+        } catch (e: DateTimeParseException) {
+            call.reject(e.message, null, e)
+            return
+        }
+
+        val endInstant = try {
+            manager.parseInstant(call.getString("endDate"), startInstant)
+        } catch (e: DateTimeParseException) {
+            call.reject(e.message, null, e)
+            return
+        }
+
+        if (endInstant.isBefore(startInstant)) {
+            call.reject("endDate must be greater than or equal to startDate")
+            return
+        }
+
+        pluginScope.launch {
+            val client = getClientOrReject(call) ?: return@launch
+            try {
+                manager.saveNutrition(client, name, mealType, calories, protein, carbs, fat, startInstant, endInstant)
+                call.resolve()
+            } catch (e: Exception) {
+                call.reject(e.message ?: "Failed to save nutrition data.", null, e)
+            }
+        }
+    }
+
     private fun parseTypeList(call: PluginCall, key: String): List<HealthDataType> {
         val array = call.getArray(key) ?: JSArray()
         val result = mutableListOf<HealthDataType>()
