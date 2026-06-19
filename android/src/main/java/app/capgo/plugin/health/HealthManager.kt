@@ -244,11 +244,11 @@ class HealthManager {
 
         // Susiejame tavo tekstinį valgio tipą su Health Connect konstantomis
         val mealTypeInt = when (mealTypeStr.lowercase()) {
-            "breakfast" -> NutritionRecord.MEAL_TYPE_BREAKFAST
-            "lunch" -> NutritionRecord.MEAL_TYPE_LUNCH
-            "dinner" -> NutritionRecord.MEAL_TYPE_DINNER
-            "snack" -> NutritionRecord.MEAL_TYPE_SNACK
-            else -> NutritionRecord.MEAL_TYPE_UNKNOWN
+            "breakfast" -> MealType.MEAL_TYPE_BREAKFAST
+            "lunch" -> MealType.MEAL_TYPE_LUNCH
+            "dinner" -> MealType.MEAL_TYPE_DINNER
+            "snack" -> MealType.MEAL_TYPE_SNACK
+            else -> MealType.MEAL_TYPE_UNKNOWN
         }
 
         // Sukuriame Health Connect maisto įrašą
