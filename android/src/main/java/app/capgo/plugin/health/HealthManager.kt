@@ -201,9 +201,6 @@ class HealthManager {
         endTime: Instant,
         metadata: Map<String, String>?
     ) {
-        // PATAISYTA: Naudojame Metadata() konstruktorių
-        val meta = Metadata() 
-        
         when (dataType) {
             HealthDataType.STEPS -> {
                 val record = StepsRecord(
@@ -211,8 +208,7 @@ class HealthManager {
                     startZoneOffset = zoneOffset(startTime),
                     endTime = endTime, 
                     endZoneOffset = zoneOffset(endTime),
-                    count = value.toLong().coerceAtLeast(0),
-                    metadata = meta
+                    count = value.toLong().coerceAtLeast(0)
                 )
                 client.insertRecords(listOf(record))
             }
@@ -220,8 +216,7 @@ class HealthManager {
                  val record = WeightRecord(
                     time = startTime, 
                     zoneOffset = zoneOffset(startTime),
-                    weight = Mass.kilograms(value),
-                    metadata = meta
+                    weight = Mass.kilograms(value)
                 )
                 client.insertRecords(listOf(record))
             }
@@ -240,8 +235,6 @@ class HealthManager {
         startTime: Instant,
         endTime: Instant
     ) {
-        val meta = Metadata()
-
         // Susiejame tavo tekstinį valgio tipą su Health Connect konstantomis
         val mealTypeInt = when (mealTypeStr.lowercase()) {
             "breakfast" -> MealType.MEAL_TYPE_BREAKFAST
@@ -251,7 +244,7 @@ class HealthManager {
             else -> MealType.MEAL_TYPE_UNKNOWN
         }
 
-        // Sukuriame Health Connect maisto įrašą
+        // Sukuriame Health Connect maisto įrašą (be rankinių metaduomenų)
         val record = NutritionRecord(
             startTime = startTime,
             startZoneOffset = zoneOffset(startTime),
@@ -262,8 +255,7 @@ class HealthManager {
             energy = if (calories > 0) Energy.kilocalories(calories) else null,
             protein = if (protein > 0) Mass.grams(protein) else null,
             totalCarbohydrate = if (carbs > 0) Mass.grams(carbs) else null,
-            totalFat = if (fat > 0) Mass.grams(fat) else null,
-            metadata = meta
+            totalFat = if (fat > 0) Mass.grams(fat) else null
         )
 
         client.insertRecords(listOf(record))
