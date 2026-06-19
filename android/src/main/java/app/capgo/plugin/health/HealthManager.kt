@@ -580,14 +580,15 @@ class HealthManager {
         }
     }
 }
-           calories: Double,
+           mealTypeStr: String,
+            calories: Double,
             protein: Double,
             carbs: Double,
             fat: Double,
             startTime: Instant,
             endTime: Instant
     ) {
-        val meta = Metadata()
+        val meta = Metadata.manualEntry()
 
         val mealTypeInt =
                 when (mealTypeStr.lowercase()) {
