@@ -1,4 +1,4 @@
-export type HealthDataType = 'steps' | 'distance' | 'calories' | 'heartRate' | 'weight' | 'sleep' | 'respiratoryRate' | 'oxygenSaturation' | 'restingHeartRate' | 'heartRateVariability';
+export type HealthDataType = 'steps' | 'distance' | 'calories' | 'heartRate' | 'weight' | 'sleep' | 'respiratoryRate' | 'oxygenSaturation' | 'restingHeartRate' | 'heartRateVariability' | 'nutrition';
 export type HealthUnit = 'count' | 'meter' | 'kilocalorie' | 'bpm' | 'kilogram' | 'minute' | 'percent' | 'millisecond';
 export interface AuthorizationOptions {
     /** Data types that should be readable after authorization. */
@@ -107,6 +107,27 @@ export interface WriteSampleOptions {
     /** Metadata key-value pairs forwarded to the native APIs where supported. */
     metadata?: Record<string, string>;
 }
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'unknown';
+export interface NutritionSample {
+    /** Maisto pavadinimas, pvz., "Grikiai" arba "Bulka" */
+    name?: string;
+    /** Valgio tipas */
+    mealType?: MealType;
+    /** Bendras kalorijų kiekis (kcal) */
+    calories?: number;
+    /** Baltymai (gramais) */
+    protein?: number;
+    /** Angliavandeniai (gramais) */
+    carbs?: number;
+    /** Riebalai (gramais) */
+    fat?: number;
+    /** ISO 8601 pradžios data (privaloma Health Connect) */
+    startDate: string;
+    /** ISO 8601 pabaigos data */
+    endDate: string;
+    /** Papildomi metaduomenys, jei prireiktų */
+    metadata?: Record<string, string>;
+}
 export type BucketType = 'hour' | 'day' | 'week' | 'month';
 export type AggregationType = 'sum' | 'average' | 'min' | 'max';
 export interface QueryAggregatedOptions {
@@ -145,6 +166,8 @@ export interface HealthPlugin {
     readSamples(options: QueryOptions): Promise<ReadSamplesResult>;
     /** Writes a single sample to the native health store. */
     saveSample(options: WriteSampleOptions): Promise<void>;
+    /** Writes a nutrition sample (food, macros) to the native health store. */
+    saveNutrition(options: NutritionSample): Promise<void>;
     /**
      * Get the native Capacitor plugin version
      *

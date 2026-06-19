@@ -93,6 +93,24 @@
         "slug": "savesample"
       },
       {
+        "name": "saveNutrition",
+        "signature": "(options: NutritionSample) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "NutritionSample"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "Writes a nutrition sample (food, macros) to the native health store.",
+        "complexTypes": [
+          "NutritionSample"
+        ],
+        "slug": "savenutrition"
+      },
+      {
         "name": "getPluginVersion",
         "signature": "() => Promise<{ version: string; }>",
         "parameters": [],
@@ -122,7 +140,7 @@
             "text": "An error if Health Connect settings cannot be opened"
           }
         ],
-        "docs": "Opens the Health Connect settings screen (Android only).\r\nOn iOS, this method does nothing.\r\n\r\nUse this to direct users to manage their Health Connect permissions\r\nor to install Health Connect if not available.",
+        "docs": "Opens the Health Connect settings screen (Android only).\nOn iOS, this method does nothing.\n\nUse this to direct users to manage their Health Connect permissions\nor to install Health Connect if not available.",
         "complexTypes": [],
         "slug": "openhealthconnectsettings"
       },
@@ -137,7 +155,7 @@
             "text": "An error if the privacy policy cannot be displayed"
           }
         ],
-        "docs": "Shows the app's privacy policy for Health Connect (Android only).\r\nOn iOS, this method does nothing.\r\n\r\nThis displays the same privacy policy screen that Health Connect shows\r\nwhen the user taps \"Privacy policy\" in the permissions dialog.\r\n\r\nThe privacy policy URL can be configured by adding a string resource\r\nnamed \"health_connect_privacy_policy_url\" in your app's strings.xml,\r\nor by placing an HTML file at www/privacypolicy.html in your assets.",
+        "docs": "Shows the app's privacy policy for Health Connect (Android only).\nOn iOS, this method does nothing.\n\nThis displays the same privacy policy screen that Health Connect shows\nwhen the user taps \"Privacy policy\" in the permissions dialog.\n\nThe privacy policy URL can be configured by adding a string resource\nnamed \"health_connect_privacy_policy_url\" in your app's strings.xml,\nor by placing an HTML file at www/privacypolicy.html in your assets.",
         "complexTypes": [],
         "slug": "showprivacypolicy"
       },
@@ -166,7 +184,7 @@
             "text": "An error if something went wrong"
           }
         ],
-        "docs": "Queries workout sessions from the native health store.\r\nSupported on iOS (HealthKit) and Android (Health Connect).",
+        "docs": "Queries workout sessions from the native health store.\nSupported on iOS (HealthKit) and Android (Health Connect).",
         "complexTypes": [
           "QueryWorkoutsResult",
           "QueryWorkoutsOptions"
@@ -198,7 +216,7 @@
             "text": "An error if something went wrong"
           }
         ],
-        "docs": "Queries aggregated health data from the native health store.\r\nAggregates data into time buckets (hour, day, week, month) with operations like sum, average, min, or max.\r\nThis is more efficient than fetching individual samples for large date ranges.\r\n\r\nSupported on iOS (HealthKit) and Android (Health Connect).",
+        "docs": "Queries aggregated health data from the native health store.\nAggregates data into time buckets (hour, day, week, month) with operations like sum, average, min, or max.\nThis is more efficient than fetching individual samples for large date ranges.\n\nSupported on iOS (HealthKit) and Android (Health Connect).",
         "complexTypes": [
           "QueryAggregatedResult",
           "QueryAggregatedOptions"
@@ -472,7 +490,7 @@
         {
           "name": "unit",
           "tags": [],
-          "docs": "Optional unit override. If omitted, the default unit for the data type is used\r\n(count for `steps`, meter for `distance`, kilocalorie for `calories`, bpm for `heartRate`, kilogram for `weight`).",
+          "docs": "Optional unit override. If omitted, the default unit for the data type is used\n(count for `steps`, meter for `distance`, kilocalorie for `calories`, bpm for `heartRate`, kilogram for `weight`).",
           "complexTypes": [
             "HealthUnit"
           ],
@@ -504,6 +522,82 @@
       ]
     },
     {
+      "name": "NutritionSample",
+      "slug": "nutritionsample",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "Maisto pavadinimas, pvz., \"Grikiai\" arba \"Bulka\"",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "mealType",
+          "tags": [],
+          "docs": "Valgio tipas",
+          "complexTypes": [
+            "MealType"
+          ],
+          "type": "MealType"
+        },
+        {
+          "name": "calories",
+          "tags": [],
+          "docs": "Bendras kalorijų kiekis (kcal)",
+          "complexTypes": [],
+          "type": "number | undefined"
+        },
+        {
+          "name": "protein",
+          "tags": [],
+          "docs": "Baltymai (gramais)",
+          "complexTypes": [],
+          "type": "number | undefined"
+        },
+        {
+          "name": "carbs",
+          "tags": [],
+          "docs": "Angliavandeniai (gramais)",
+          "complexTypes": [],
+          "type": "number | undefined"
+        },
+        {
+          "name": "fat",
+          "tags": [],
+          "docs": "Riebalai (gramais)",
+          "complexTypes": [],
+          "type": "number | undefined"
+        },
+        {
+          "name": "startDate",
+          "tags": [],
+          "docs": "ISO 8601 pradžios data (privaloma Health Connect)",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "endDate",
+          "tags": [],
+          "docs": "ISO 8601 pabaigos data",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "metadata",
+          "tags": [],
+          "docs": "Papildomi metaduomenys, jei prireiktų",
+          "complexTypes": [
+            "Record"
+          ],
+          "type": "Record<string, string>"
+        }
+      ]
+    },
+    {
       "name": "QueryWorkoutsResult",
       "slug": "queryworkoutsresult",
       "docs": "",
@@ -522,7 +616,7 @@
         {
           "name": "anchor",
           "tags": [],
-          "docs": "Anchor for the next page of results. Pass this value as the anchor parameter in the next query\r\nto continue pagination. If undefined or null, there are no more results.",
+          "docs": "Anchor for the next page of results. Pass this value as the anchor parameter in the next query\nto continue pagination. If undefined or null, there are no more results.",
           "complexTypes": [],
           "type": "string | undefined"
         }
@@ -651,7 +745,7 @@
         {
           "name": "anchor",
           "tags": [],
-          "docs": "Anchor for pagination. Use the anchor returned from a previous query to continue from that point.\r\nOn iOS, this uses HKQueryAnchor. On Android, this uses Health Connect's pageToken.\r\nOmit this parameter to start from the beginning.",
+          "docs": "Anchor for pagination. Use the anchor returned from a previous query to continue from that point.\nOn iOS, this uses HKQueryAnchor. On Android, this uses Health Connect's pageToken.\nOmit this parameter to start from the beginning.",
           "complexTypes": [],
           "type": "string | undefined"
         }
@@ -811,6 +905,10 @@
         {
           "text": "'heartRateVariability'",
           "complexTypes": []
+        },
+        {
+          "text": "'nutrition'",
+          "complexTypes": []
         }
       ]
     },
@@ -895,6 +993,33 @@
             "K",
             "T"
           ]
+        }
+      ]
+    },
+    {
+      "name": "MealType",
+      "slug": "mealtype",
+      "docs": "",
+      "types": [
+        {
+          "text": "'breakfast'",
+          "complexTypes": []
+        },
+        {
+          "text": "'lunch'",
+          "complexTypes": []
+        },
+        {
+          "text": "'dinner'",
+          "complexTypes": []
+        },
+        {
+          "text": "'snack'",
+          "complexTypes": []
+        },
+        {
+          "text": "'unknown'",
+          "complexTypes": []
         }
       ]
     },

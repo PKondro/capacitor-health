@@ -19,6 +19,9 @@ export class HealthWeb extends WebPlugin {
     async saveSample(_options) {
         throw this.unimplemented('Writing health data is only available on native platforms.');
     }
+    async saveNutrition(_options) {
+        throw this.unimplemented('Writing nutrition data is only available on native platforms.');
+    }
     async getPluginVersion() {
         return { version: 'web' };
     }
