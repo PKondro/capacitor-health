@@ -289,7 +289,7 @@ class HealthManager {
         client.deleteRecords(
             recordType = NutritionRecord::class,
             clientRecordIdsList = listOf(id),
-            uidList = emptyList()
+            recordIdsList = emptyList()
         )
     }
 
