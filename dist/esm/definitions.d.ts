@@ -109,6 +109,8 @@ export interface WriteSampleOptions {
 }
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'unknown';
 export interface NutritionSample {
+    /** Papildomas ID trynimui */
+    id?: string;
     /** Maisto pavadinimas, pvz., "Grikiai" arba "Bulka" */
     name?: string;
     /** Valgio tipas */
@@ -121,6 +123,10 @@ export interface NutritionSample {
     carbs?: number;
     /** Riebalai (gramais) */
     fat?: number;
+    sugar?: number;
+    salt?: number;
+    fiber?: number;
+    saturatedFat?: number;
     /** ISO 8601 pradžios data (privaloma Health Connect) */
     startDate: string;
     /** ISO 8601 pabaigos data */
@@ -168,6 +174,8 @@ export interface HealthPlugin {
     saveSample(options: WriteSampleOptions): Promise<void>;
     /** Writes a nutrition sample (food, macros) to the native health store. */
     saveNutrition(options: NutritionSample): Promise<void>;
+    /** Deletes a nutrition sample from the native health store. */
+    deleteNutrition(options: { id: string }): Promise<void>;
     /**
      * Get the native Capacitor plugin version
      *

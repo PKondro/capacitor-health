@@ -236,25 +236,16 @@ class HealthManager {
 
     suspend fun saveNutrition(
         client: HealthConnectClient,
-        id: String?,
         name: String,
         mealTypeStr: String,
         calories: Double,
         protein: Double,
         carbs: Double,
         fat: Double,
-        sugar: Double,
-        salt: Double,
-        fiber: Double,
-        saturatedFat: Double,
         startTime: Instant,
         endTime: Instant
     ) {
-        val meta = if (id != null) {
-            Metadata.manualEntry(clientRecordId = id, clientRecordVersion = 0)
-        } else {
-            Metadata.manualEntry()
-        }
+        val meta = Metadata.manualEntry()
 
         val mealTypeInt = when (mealTypeStr.lowercase()) {
             "breakfast" -> MealType.MEAL_TYPE_BREAKFAST
@@ -275,22 +266,10 @@ class HealthManager {
             protein = if (protein > 0) Mass.grams(protein) else null,
             totalCarbohydrate = if (carbs > 0) Mass.grams(carbs) else null,
             totalFat = if (fat > 0) Mass.grams(fat) else null,
-            sugar = if (sugar > 0) Mass.grams(sugar) else null,
-            sodium = if (salt > 0) Mass.grams(salt) else null,
-            dietaryFiber = if (fiber > 0) Mass.grams(fiber) else null,
-            saturatedFat = if (saturatedFat > 0) Mass.grams(saturatedFat) else null,
             metadata = meta
         )
 
         client.insertRecords(listOf(record))
-    }
-
-    suspend fun deleteNutrition(client: HealthConnectClient, id: String) {
-        client.deleteRecords(
-            recordType = NutritionRecord::class,
-            clientRecordIdsList = listOf(id),
-            uidList = emptyList()
-        )
     }
 
     fun parseInstant(value: String?, defaultInstant: Instant): Instant {

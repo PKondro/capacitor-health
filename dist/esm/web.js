@@ -22,6 +22,9 @@ export class HealthWeb extends WebPlugin {
     async saveNutrition(_options) {
         throw this.unimplemented('Writing nutrition data is only available on native platforms.');
     }
+    async deleteNutrition(_options) {
+        throw this.unimplemented('Deleting nutrition data is only available on native platforms.');
+    }
     async getPluginVersion() {
         return { version: 'web' };
     }

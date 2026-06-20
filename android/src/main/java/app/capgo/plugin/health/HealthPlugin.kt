@@ -259,12 +259,17 @@ class HealthPlugin : Plugin() {
 
     @PluginMethod
     fun saveNutrition(call: PluginCall) {
+        val id = call.getString("id")
         val name = call.getString("name") ?: ""
         val mealType = call.getString("mealType") ?: "unknown"
         val calories = call.getDouble("calories") ?: 0.0
         val protein = call.getDouble("protein") ?: 0.0
         val carbs = call.getDouble("carbs") ?: 0.0
         val fat = call.getDouble("fat") ?: 0.0
+        val sugar = call.getDouble("sugar") ?: 0.0
+        val salt = call.getDouble("salt") ?: 0.0
+        val fiber = call.getDouble("fiber") ?: 0.0
+        val saturatedFat = call.getDouble("saturatedFat") ?: 0.0
 
         val startInstant = try {
             manager.parseInstant(call.getString("startDate"), Instant.now())
@@ -288,10 +293,29 @@ class HealthPlugin : Plugin() {
         pluginScope.launch {
             val client = getClientOrReject(call) ?: return@launch
             try {
-                manager.saveNutrition(client, name, mealType, calories, protein, carbs, fat, startInstant, endInstant)
+                manager.saveNutrition(client, id, name, mealType, calories, protein, carbs, fat, sugar, salt, fiber, saturatedFat, startInstant, endInstant)
                 call.resolve()
             } catch (e: Exception) {
                 call.reject(e.message ?: "Failed to save nutrition data.", null, e)
+            }
+        }
+    }
+
+    @PluginMethod
+    fun deleteNutrition(call: PluginCall) {
+        val id = call.getString("id")
+        if (id.isNullOrBlank()) {
+            call.reject("id is required")
+            return
+        }
+
+        pluginScope.launch {
+            val client = getClientOrReject(call) ?: return@launch
+            try {
+                manager.deleteNutrition(client, id)
+                call.resolve()
+            } catch (e: Exception) {
+                call.reject(e.message ?: "Failed to delete nutrition data.", null, e)
             }
         }
     }

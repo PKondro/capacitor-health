@@ -283,6 +283,7 @@ const { samples: avgHR } = await Health.queryAggregated({
 * [`checkAuthorization(...)`](#checkauthorization)
 * [`readSamples(...)`](#readsamples)
 * [`saveSample(...)`](#savesample)
+* [`saveNutrition(...)`](#savenutrition)
 * [`getPluginVersion()`](#getpluginversion)
 * [`openHealthConnectSettings()`](#openhealthconnectsettings)
 * [`showPrivacyPolicy()`](#showprivacypolicy)
@@ -371,6 +372,21 @@ Writes a single sample to the native health store.
 | Param         | Type                                                              |
 | ------------- | ----------------------------------------------------------------- |
 | **`options`** | <code><a href="#writesampleoptions">WriteSampleOptions</a></code> |
+
+--------------------
+
+
+### saveNutrition(...)
+
+```typescript
+saveNutrition(options: NutritionSample) => Promise<void>
+```
+
+Writes a nutrition sample (food, macros) to the native health store.
+
+| Param         | Type                                                        |
+| ------------- | ----------------------------------------------------------- |
+| **`options`** | <code><a href="#nutritionsample">NutritionSample</a></code> |
 
 --------------------
 
@@ -535,6 +551,21 @@ Supported on iOS (HealthKit) and Android (Health Connect).
 | **`metadata`**  | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | Metadata key-value pairs forwarded to the native APIs where supported.                                                                                                                            |
 
 
+#### NutritionSample
+
+| Prop            | Type                                                            | Description                                       |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------- |
+| **`name`**      | <code>string</code>                                             | Maisto pavadinimas, pvz., "Grikiai" arba "Bulka"  |
+| **`mealType`**  | <code><a href="#mealtype">MealType</a></code>                   | Valgio tipas                                      |
+| **`calories`**  | <code>number</code>                                             | Bendras kalorijų kiekis (kcal)                    |
+| **`protein`**   | <code>number</code>                                             | Baltymai (gramais)                                |
+| **`carbs`**     | <code>number</code>                                             | Angliavandeniai (gramais)                         |
+| **`fat`**       | <code>number</code>                                             | Riebalai (gramais)                                |
+| **`startDate`** | <code>string</code>                                             | ISO 8601 pradžios data (privaloma Health Connect) |
+| **`endDate`**   | <code>string</code>                                             | ISO 8601 pabaigos data                            |
+| **`metadata`**  | <code><a href="#record">Record</a>&lt;string, string&gt;</code> | Papildomi metaduomenys, jei prireiktų             |
+
+
 #### QueryWorkoutsResult
 
 | Prop           | Type                   | Description                                                                                                                                                             |
@@ -603,7 +634,7 @@ Supported on iOS (HealthKit) and Android (Health Connect).
 
 #### HealthDataType
 
-<code>'steps' | 'distance' | 'calories' | 'heartRate' | 'weight' | 'sleep' | 'respiratoryRate' | 'oxygenSaturation' | 'restingHeartRate' | 'heartRateVariability'</code>
+<code>'steps' | 'distance' | 'calories' | 'heartRate' | 'weight' | 'sleep' | 'respiratoryRate' | 'oxygenSaturation' | 'restingHeartRate' | 'heartRateVariability' | 'nutrition'</code>
 
 
 #### HealthUnit
@@ -621,6 +652,11 @@ Supported on iOS (HealthKit) and Android (Health Connect).
 Construct a type with a set of properties K of type T
 
 <code>{ [P in K]: T; }</code>
+
+
+#### MealType
+
+<code>'breakfast' | 'lunch' | 'dinner' | 'snack' | 'unknown'</code>
 
 
 #### WorkoutType
